@@ -73,4 +73,3 @@ def thread_speech(first_ask):
 
 
 
-
