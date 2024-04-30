@@ -33,12 +33,13 @@ def speech_to_text(number_of_questions = 20):
                 except Exception as e:
                     print("Exception: " + str(e))
 
-    return text_answers
+    df = pd.DataFrame(text_answers)
+
+    return df
 
 
 #print(speech_to_text())
 
-df = pd.DataFrame(speech_to_text())
 
-df.to_csv('EMMA_interview.csv', index=False, header=False)
+# df.to_csv('EMMA_interview.csv', index=False, header=False)
 
