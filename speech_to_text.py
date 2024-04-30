@@ -4,7 +4,7 @@ import pandas as pd
 import re
 
 
-def speech_to_text(number_of_questions = 20):
+def speech_to_text():
     wd = os.path.abspath('')
 
     directory_questions_speech = os.path.abspath(wd + '/answer_questions_speech/')
