@@ -44,8 +44,8 @@ def start_screen():
     frame_q1 = create_gui_q1(window, frame_q4, first_ask_q4)
     frame_q1.grid(row=0, column=0)
 
-    frame_landing = create_gui_landing(window, frame_q1, first_ask_q1)
-    frame_landing.grid(row=0, column=0)
+    # frame_landing = create_gui_landing(window, frame_q1, first_ask_q1)
+    # frame_landing.grid(row=0, column=0)
 
     
 
@@ -63,7 +63,8 @@ def start_screen():
     # show_frame()
 
 
-    thread_speech(first_ask_landing)
+    # thread_speech(first_ask_landing)
+    thread_speech(first_ask_q1)
 
     window.mainloop()
 

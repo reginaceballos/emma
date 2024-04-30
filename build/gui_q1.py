@@ -233,15 +233,15 @@ def create_gui_q1(window, next_frame, next_first_ask_function):
     image_frame_q1.place(
         x=829,
         y=182,
+        bd=0
     )
 
     image_video_q1 = Label(image_frame_q1, width=width, height=height)
     image_video_q1.place(
         x=0,
         y=0,
+        bd=0
     )
-    
-    cap_play_q1 = cv2.VideoCapture(0)
 
 
     
@@ -256,7 +256,8 @@ def recording_button(file_suffix):
         button_repeat_q1, button_repeat_image_q1, button_repeat_image_hover_q1,\
         button_record_q1, button_record_image_q1, button_record_image_hover_q1, \
         button_play_q1, button_play_image_q1, button_play_image_hover_q1, \
-        button_next_q1, button_next_image_q1, button_next_image_hover_q1
+        button_next_q1, button_next_image_q1, button_next_image_hover_q1, \
+        cap_play_q1
 
     if record:
         # thread_1 = threading.Thread(target=stop)
@@ -264,6 +265,7 @@ def recording_button(file_suffix):
         # thread_1.start()
         # thread_2.start()
         stop()
+        stop_frame()
 
         button_record_image_q1 = PhotoImage(file=relative_to_assets("button_record.png"))
         button_record_image_hover_q1 = PhotoImage(file=relative_to_assets("button_record_hover.png"))
@@ -286,6 +288,9 @@ def recording_button(file_suffix):
 
     else:
         start(file_suffix)
+
+        cap_play_q1 = cv2.VideoCapture(0)
+        
         show_frame()
 
         button_record_image_q1 = PhotoImage(file=relative_to_assets("button_stop_recording.png"))
@@ -344,3 +349,10 @@ def show_frame():
         image_video_q1.imgtk = imgtk
         image_video_q1.configure(image=imgtk)
         image_video_q1.after(10, show_frame)
+
+
+def stop_frame():
+    if cap_play_q1.isOpened():
+        cap_play_q1.release()
+
+    image_video_q1.configure(image=image_file_no_video_display_q1)
