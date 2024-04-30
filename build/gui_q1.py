@@ -235,12 +235,6 @@ def create_gui_q1(window, next_frame, next_first_ask_function):
         y=182,
     )
 
-    imgtk = ImageTk.PhotoImage(image=img)
-
-    image_video_q1.imgtk = image_file_no_video_display_q1
-    image_video_q1.configure(image=imgtk)
-    image_video_q1.after(10, show_frame)
-
     image_video_q1 = Label(image_frame_q1, width=width, height=height)
     image_video_q1.place(
         x=0,
@@ -270,7 +264,6 @@ def recording_button(file_suffix):
         # thread_1.start()
         # thread_2.start()
         stop()
-        stop_frame()
 
         button_record_image_q1 = PhotoImage(file=relative_to_assets("button_record.png"))
         button_record_image_hover_q1 = PhotoImage(file=relative_to_assets("button_record_hover.png"))
@@ -346,13 +339,6 @@ def show_frame():
         frame_pic = cv2.flip(frame_play, 1)
         cv2image = cv2.cvtColor(frame_pic, cv2.COLOR_BGR2RGBA)
         img = Image.fromarray(cv2image)
-        imgtk = ImageTk.PhotoImage(image=img)
-
-        image_video_q1.imgtk = imgtk
-        image_video_q1.configure(image=imgtk)
-        image_video_q1.after(10, show_frame)
-
-def stop_frame():
         imgtk = ImageTk.PhotoImage(image=img)
 
         image_video_q1.imgtk = imgtk
