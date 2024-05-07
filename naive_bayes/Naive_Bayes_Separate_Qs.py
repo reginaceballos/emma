@@ -10,6 +10,7 @@ from tkinter import messagebox
 import numpy as np
 from sklearn.metrics import roc_curve, auc
 import pickle
+import evaluate
 
 # Helper function for lamda in make bayes model
 def identity_analyzer(x):
@@ -19,8 +20,12 @@ def identity_analyzer(x):
 def make_bayes_model(responses_w_IDs, label_array):
     # Remove the interview ID from each response row
     responses = [sublist[1:] for sublist in responses_w_IDs]
-    ## Make training and testing sets
-    X_train, X_test, y_train, y_test = train_test_split(responses, label_array, test_size=0.20, random_state=120)
+    indices = np.arange(len(responses))  # Generate indices
+    # Splitting data and indices to make training and testing sets
+    X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(responses, label_array, indices, test_size=0.20, random_state=20)
+
+    # ## Make training and testing sets
+    # X_train, X_test, y_train, y_test = train_test_split(responses, label_array, test_size=0.20, random_state= 20)
     # X_train, X_test, y_train, y_test = train_test_split(responses, label_array, test_size=0.20)
 
     ## Count Vectorization
@@ -32,6 +37,9 @@ def make_bayes_model(responses_w_IDs, label_array):
     for i in range(num_questions):
         one_q_list_train = [sublist[i] for sublist in X_train]
         one_q_list_test = [sublist[i] for sublist in X_test]
+        # print(one_q_list_test)
+        # print("===================================================================")
+        # print()
         # create a count vectorizer object
         # vectorizer = CountVectorizer(analyzer=lambda x: x) # Had a problem saving this as a pickle object
         vectorizer = CountVectorizer(analyzer=identity_analyzer)
@@ -54,19 +62,33 @@ def make_bayes_model(responses_w_IDs, label_array):
     predictions = model_NB.predict(X_test_final)
     flat_y_test = [item for row in y_test for item in row]
 
-    return (model_NB, predictions, flat_y_test, vectorizer_list, y_pred_proba, y_test)
+    return (model_NB, predictions, flat_y_test, vectorizer_list, y_pred_proba, y_test, X_test)
 
 ## Prepare a new data point to be tested by the model
-def prepare_new_datapoint(input_file_name, questions_kept, vectorizer_list):
-    input_file_name = "/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/EMMA/" + input_file_name
-    response_dict = {} # dictionary where the question index is the key and the response is the value
-    with open(input_file_name, 'r', encoding='utf-8-sig') as csvfile:
-        datareader = csv.reader(csvfile)
-        for row in datareader:
-            if len(row) > 0:  # Accounts for empty rows in the csv
-                [question_index, response_string] = row
-                # make response string all lowercase and add to the dictionary
-                response_dict[int(question_index)] = response_string.lower()
+def prepare_new_datapoint(input_file_name, questions_kept, vectorizer_list, input_file_given):
+    if input_file_given == 1:
+        input_file_name = "/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/EMMA/" + input_file_name
+        response_dict = {} # dictionary where the question index is the key and the response is the value
+        with open(input_file_name, 'r', encoding='utf-8-sig') as csvfile:
+            datareader = csv.reader(csvfile)
+            for row in datareader:
+                if len(row) > 0:  # Accounts for empty rows in the csv
+                    [question_index, response_string] = row
+                    # make response string all lowercase and add to the dictionary
+                    response_dict[int(question_index)] = response_string.lower()
+    else: # When there's no input file provided, make a fake input file
+        response_dict = {}  # dictionary where the question index is the key and the response is the value
+        pre_made_dict = {}
+        pre_made_dict[1] = "i'm doing well today thanks for asking"
+        pre_made_dict[4] = "the last time i was really happy was yesterday when i spent too day with my dog and my family we went to the park"
+        pre_made_dict[5] = "i got into an argument with my mom last month because she wants me to come home for christmas, but i told her i'm going to my partner's house for christmas"
+        pre_made_dict[6] = "i have been sleeping pretty easily i usually get a minimum oof eight hours a night"
+        pre_made_dict[30] = "i don't really feel guilty about anything maybe on procrastinating on my homework"
+        for q in questions_kept:
+            if q in pre_made_dict:
+                response_dict[q] = pre_made_dict[q]
+            else:
+                response_dict[q] = "test_response"
 
     # Make a 1 x Q response matrix (list of lists), where Q is the number of questions
     # Make the order of the response matrix match the questions used in the training data
@@ -88,7 +110,6 @@ def prepare_new_datapoint(input_file_name, questions_kept, vectorizer_list):
     for i in range(num_questions):
         vectorizer = vectorizer_list[i]
         one_q_list_point = [sublist[i] for sublist in cleaned_new_point]
-        print(one_q_list_point)
         point_count = vectorizer.transform(one_q_list_point)
         point_features_list.append(point_count.toarray())
 
@@ -146,8 +167,12 @@ def save_questions(question_list, filename):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         input_file_name = sys.argv[1]
+        input_file_given = 1
     else:
-        sys.exit("No input file name provided. Please provide a file name as an argument.")
+        print("No input file csv file provided for a new prediction. Defaulting to internal test file.", "\n")
+        input_file_name = "no input file given"
+        input_file_given = 0
+        # sys.exit("No input file name provided. Please provide a file name as an argument.")
 
     ## Prepare the data
     (interview_responses, reversed_question_dict) = response_matrix()
@@ -156,74 +181,84 @@ if __name__ == "__main__":
     label_array = label_array(responses_w_IDs)
 
     # Make the model
-    (model_NB, predictions, flat_y_test, vectorizer_list, y_pred_proba, y_test) = make_bayes_model(responses_w_IDs, label_array)
+    (model_NB, predictions, flat_y_test, vectorizer_list, y_pred_proba, y_test, X_test) = make_bayes_model(responses_w_IDs, label_array)
 
-    # Evaluate the model
-    ### Accuracy
-    # accuracy = metrics.accuracy_score(predictions, flat_y_test)
-    # print("Accuracy: ", accuracy)
-    # print("Questions listed: ", questions_kept)
+    # Change the threshold value
+    new_threshold = 0.000025  # Threshold of 0.000025, random seed of 20 for the demo
 
-    # ### Confusion matrix
-    # confusion_matrix = metrics.confusion_matrix(flat_y_test, predictions)
-    # cm_display = metrics.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=[0, 1])
-    # cm_display.plot()
-    # plt.show()
+    # Classify instances based on the new threshold
+    predictions_lower_threshold = (y_pred_proba >= new_threshold).astype(int)
 
-    ## ROC curve
-    # Calculate and Plot the ROC curve
-    fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)
-    roc_auc = auc(fpr, tpr)
-    # Plot the ROC curve
+    # Compute metrics
+    accuracy = evaluate.load("accuracy")
+    precision = evaluate.load("precision")
+    recall = evaluate.load("recall")
+    f1 = evaluate.load("f1")
+
+    acc_score = accuracy.compute(predictions=predictions_lower_threshold, references=flat_y_test)
+    prec_score = precision.compute(predictions=predictions_lower_threshold, references=flat_y_test)
+    rec_score = recall.compute(predictions=predictions_lower_threshold, references=flat_y_test)
+    f1_score = f1.compute(predictions=predictions_lower_threshold, references=flat_y_test)
+
+    print("Lower Threshold Accuracy: ", acc_score)
+    print("Lower Threshold Precision: ", prec_score)
+    print("Lower Threshold Recall: ", rec_score)
+    print("Lower Threshold F1: ", f1_score)
+
+    # Evaluate performance with the new threshold
+    fpr_lower, tpr_lower, thresholds_lower = roc_curve(y_test, y_pred_proba)
+    roc_auc_lower = auc(fpr_lower, tpr_lower)
+
+    # Plot the ROC curve with the new threshold
     plt.figure()
-    plt.plot(fpr, tpr, label='ROC curve (area = %0.2f)' % roc_auc)
+    plt.plot(fpr_lower, tpr_lower, label='ROC curve (area = %0.2f)' % roc_auc_lower)
     plt.plot([0, 1], [0, 1], 'k--', label='No Skill')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('ROC Curve for Depression Detection')
+    plt.title('ROC Curve for Depression Detection (Lower Threshold)')
     plt.legend()
     plt.show()
 
-    # ## Evaluate the model using Cross-Validation
-    # (model_CV, response_count, flat_label_array) = calc_cross_validation(responses_w_IDs, label_array)
-    # cv_scores = cross_val_score(model_CV, response_count, flat_label_array, cv=KFold(5, shuffle=True))
-    # print("Cross-validated scores:", cv_scores)
-    # print("Mean CV Accuracy: ", np.mean(cv_scores))
+    # Evaluate the model using Cross-Validation with the new threshold
+    (model_CV, response_count, flat_label_array) = calc_cross_validation(responses_w_IDs, label_array)
+    cv_scores_lower_threshold = cross_val_score(model_NB, response_count, flat_label_array, cv=KFold(5, shuffle=True))
+    # print("Cross-validated scores with lower threshold:", cv_scores_lower_threshold)
+    print("Mean CV Accuracy with lower threshold: ", np.mean(cv_scores_lower_threshold))
+    print("==========================================")
+
+    # Make a confusion matrix:
+    # Calculate the confusion matrix
+    conf_matrix_lower_threshold = metrics.confusion_matrix(flat_y_test, predictions_lower_threshold)
+    # Display the confusion matrix
+    disp_lower_threshold = metrics.ConfusionMatrixDisplay(confusion_matrix=conf_matrix_lower_threshold, display_labels=[0, 1])
+    disp_lower_threshold.plot()
+    plt.title('Confusion Matrix (Lower Threshold)')
+    plt.show()
 
     # prepare new datapoint
-    cleaned_new_point = prepare_new_datapoint(input_file_name, questions_kept, vectorizer_list)
+    cleaned_new_point = prepare_new_datapoint(input_file_name, questions_kept, vectorizer_list, input_file_given)
+
     # Make a prediction for a new datapoint
-    prediction = model_NB.predict(cleaned_new_point)
-    print("Prediction: ", prediction)
+    # prediction = model_NB.predict(cleaned_new_point)
+    y_pred_proba = model_NB.predict_proba(cleaned_new_point)[:, 1]  # Get probabilities for the positive class
+    prediction = (y_pred_proba >= new_threshold).astype(int)  # Apply the new threshold
+    if prediction[0] == 0:
+        print("Prediction: Risk of depression not detected")
+    elif prediction[0] == 1:
+        print("Prediction: Risk of depression detected")
+    else:
+        print("error: Prediction not found")
 
-    ## Find the confidence score (the positive probability) for the new datapoint
-    probability_of_positive_class = model_NB.predict_proba(cleaned_new_point)[0][1]
-    print(f"Probability of being in the positive class: {probability_of_positive_class:.2f}")
-
-    # ## Show the result in a pop up window
-    # # Create the main window
-    # root = tk.Tk()
-    # root.withdraw()  # Hide the main window as we only want to show the popup
-    # # Call the function to show the popup
-    # show_result(prediction)
-    # # Start the Tkinter event loop
-    # root.mainloop()
-
-    ## Save model, question list, and vectorizers list for use in a different script
+    # Save model, question list, and vectorizers list to be integrated in the front end
     save_model(model_NB, 'naive_bayes_model.pkl')
     save_vectorizers(vectorizer_list, 'vectorizers.pkl')
     save_questions(questions_kept, 'saved_questions.pkl')
 
-    # Find the correctly classified indices
-    # correct_predictions = predictions == flat_y_test
-    # correct_indices = np.where(correct_predictions)[0]  # Get indices of correct predictions
 
-    # # Optionally, print out or use correct_indices to see specific examples
-    # print(f'Correctly classified indices: {correct_indices}')
-    # print(f'Number of correctly classified: {np.sum(correct_predictions)}')
-    # print(f'Accuracy: {np.mean(correct_predictions)}')  # This should match your accuracy if calculated elsewhere
+
+
 
 
 
