@@ -79,14 +79,18 @@ def make_new_prediction():
     (transcript, point_final) = prepare_new_datapoint(saved_questions, vectorizer_list)
 
     # Make a prediction for a new datapoint
-    prediction = int(model_NB.predict(point_final)[0])
+    # prediction = int(model_NB.predict(point_final)[0])
+    probabilities = model_NB.predict_proba(point_final)[0]
+    at_risk_probability = probabilities[1]
 
-    if prediction == 0:
+    threshold = 0.000025
+
+    if at_risk_probability <= threshold:
         string_diagnosis = "Patient is not at risk of depression"
-    elif prediction == 1:
-        string_diagnosis = "Patient is at risk of depression"
     else:
-        string_diagnosis = "Error in generating a prediction"
+        string_diagnosis = "Patient is at risk of depression"
+    # else:
+    #     string_diagnosis = "Error in generating a prediction"
 
     print('string_diagnosis',string_diagnosis)
 
