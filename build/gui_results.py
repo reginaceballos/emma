@@ -1,5 +1,5 @@
 from utils_gui import *
-from naive_bayes.Make_New_Prediction import *
+# from naive_bayes.Make_New_Prediction import *
 from speech_to_text import *
 from hume_expression import *
 from tkinter import Canvas, PhotoImage, Label, Button, Frame
