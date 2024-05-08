@@ -5,7 +5,6 @@ from utils_gui import *
 
 
 def start_screen():
-    global frame_q2
     window = Tk()
 
     window.geometry("1400x800")

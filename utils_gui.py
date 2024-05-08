@@ -15,7 +15,7 @@ def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
 
-def start(file_suffix = ''):
+def start_audio(file_suffix = ''):
     global running
     if file_suffix != '':
         file_suffix = '_' + file_suffix
@@ -24,7 +24,7 @@ def start(file_suffix = ''):
     running = rec.open('answer_questions_speech/recording' + file_suffix + '.wav', 'wb')
     running.start_recording()
 
-def stop():
+def stop_audio():
     running.stop_recording()
     running.close()
 
@@ -69,7 +69,4 @@ def move_to_next_question_frame(next_frame, next_first_ask_function = None):
 def thread_speech(first_ask):
     thread = threading.Thread(target=first_ask)
     thread.start()
-
-
-
 
