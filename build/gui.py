@@ -47,24 +47,86 @@ image_image_2 = PhotoImage(
     file=relative_to_assets("image_2.png"))
 image_2 = canvas.create_image(
     700.0,
-    36.0,
+    470.0,
     image=image_image_2
 )
 
 image_image_3 = PhotoImage(
     file=relative_to_assets("image_3.png"))
 image_3 = canvas.create_image(
-    339.0,
-    340.0,
+    700.0,
+    36.0,
     image=image_image_3
 )
 
 image_image_4 = PhotoImage(
     file=relative_to_assets("image_4.png"))
 image_4 = canvas.create_image(
-    1041.0,
-    451.0,
+    339.0,
+    340.0,
     image=image_image_4
+)
+
+image_image_5 = PhotoImage(
+    file=relative_to_assets("image_5.png"))
+image_5 = canvas.create_image(
+    1052.0,
+    479.0,
+    image=image_image_5
+)
+
+canvas.create_text(
+    965.0,
+    409.0,
+    anchor="nw",
+    text="Embarrassment",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
+)
+
+canvas.create_text(
+    965.0,
+    633.0,
+    anchor="nw",
+    text="Joy",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
+)
+
+canvas.create_text(
+    965.0,
+    313.0,
+    anchor="nw",
+    text="Disappointment",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
+)
+
+canvas.create_text(
+    965.0,
+    537.0,
+    anchor="nw",
+    text="Sadness",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
+)
+
+canvas.create_text(
+    965.0,
+    361.0,
+    anchor="nw",
+    text="Empathic Pain",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
+)
+
+canvas.create_text(
+    965.0,
+    585.0,
+    anchor="nw",
+    text="Disgust",
+    fill="#FFFFFF",
+    font=("DMSans Bold", 32 * -1)
 )
 
 canvas.create_text(
@@ -86,8 +148,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1016.0,
-    462.0,
+    1230.0,
+    361.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
@@ -95,8 +157,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1016.0,
-    570.0,
+    1230.0,
+    585.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
@@ -104,8 +166,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1193.0,
-    462.0,
+    1230.0,
+    409.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
@@ -113,8 +175,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1193.0,
-    570.0,
+    1230.0,
+    633.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
@@ -122,8 +184,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1016.0,
-    390.0,
+    1230.0,
+    313.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
@@ -131,8 +193,8 @@ canvas.create_text(
 )
 
 canvas.create_text(
-    1193.0,
-    390.0,
+    1230.0,
+    537.0,
     anchor="nw",
     text="80%",
     fill="#FFFFFF",
