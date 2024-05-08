@@ -70,12 +70,3 @@ def thread_speech(first_ask):
     thread = threading.Thread(target=first_ask)
     thread.start()
 
-
-# def thread_video(target):
-#     thread = threading.Thread(target=target)
-#     thread.start()
-
-
-
-
-

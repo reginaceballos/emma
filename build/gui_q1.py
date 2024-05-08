@@ -4,7 +4,7 @@ from tkinter import Canvas, PhotoImage, Label, Button, Frame
 import threading
 import cv2
 from PIL import Image, ImageTk
-# import multiprocessing
+from tkvideo.tkvideo import tkvideo
 
 
 width = 479
@@ -171,7 +171,8 @@ def create_gui_q1(window, next_frame, next_first_ask_function):
         frame_q1,
         image=button_play_image_q1,
         highlightthickness=0,
-        command=lambda: play_audio("answer_questions_speech/recording_q1.wav"),
+        # command=lambda: play_audio("answer_questions_speech/recording_q1.wav"),
+        command=replay_video_and_audio_q1,
         relief="flat",
         state="disabled"
     )
@@ -236,12 +237,20 @@ def create_gui_q1(window, next_frame, next_first_ask_function):
     )
 
     image_video_q1 = Label(image_frame_q1, width=width, height=height,
+        image=image_file_no_video_display_q1,
         bd=0)
     image_video_q1.place(
         x=0,
         y=0
     )
+
     
+    video_path = '/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/answer_questions_video/video_q1.mp4'
+
+    cap_replay_q1 = cv2.VideoCapture(video_path)
+
+
+
 
     return frame_q1
 
@@ -359,10 +368,13 @@ def stop_frame_q1():
 
 
 def start_recording_video(file_suffix):
-    global recording
+    global recording, cap_replay_q1
+
+    video_path = 'answer_questions_video/video_answer_' + file_suffix + '.mp4'
     
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('answer_questions_video/video_answer_' + file_suffix + '.mp4',fourcc,  25.0, (1280, 720))
+    # out = cv2.VideoWriter('answer_questions_video/video_answer_' + file_suffix + '.mp4',fourcc,  25.0, (1280, 720))
+    out = cv2.VideoWriter(video_path,fourcc,  25.0, (1280, 720))
 
     cap_record = cv2.VideoCapture(0)
 
@@ -381,3 +393,35 @@ def start_recording_video(file_suffix):
 
     cap_record.release()
     out.release()
+
+    cap_replay_q1 = cv2.VideoCapture(video_path)
+
+
+def replay_video_and_audio_q1():
+    thread = threading.Thread(target=lambda: play_audio("answer_questions_speech/recording_q1.wav"))
+    thread.start()
+    time.sleep(1)
+    replay_video_q1()
+
+
+def replay_video_q1():
+
+    ret_replay, frame_replay = cap_replay_q1.read()
+
+    if ret_replay:
+        frame_replay = cv2.resize(frame_replay, (width, height))
+
+        frame_pic = cv2.flip(frame_replay, 1)
+
+        cv2image = cv2.cvtColor(frame_pic, cv2.COLOR_BGR2RGBA)
+        img = Image.fromarray(cv2image)
+        imgtk = ImageTk.PhotoImage(image=img)
+        
+
+        image_video_q1.imgtk = imgtk
+        image_video_q1.configure(image=imgtk)
+        image_video_q1.after(2, replay_video_q1)
+    else:
+        image_video_q1.configure(image=image_file_no_video_display_q1)
+        cap_replay_q1.set(cv2.CAP_PROP_POS_FRAMES, 0)
+

@@ -3,6 +3,8 @@ from build.gui_landing import *
 from build.gui_q1 import *
 from build.gui_q4 import *
 from build.gui_q5 import *
+from build.gui_q6 import *
+from build.gui_q30 import *
 from build.gui_thanks import *
 from utils_gui import *
 
@@ -25,7 +27,7 @@ def show_frame():
 
 
 def start_screen():
-    global frame_q2, cap_play, image_video
+    global cap_play, image_video
     window = Tk()
 
     window.geometry("1400x800")
@@ -35,7 +37,13 @@ def start_screen():
     frame_thanks = create_gui_thanks(window)
     frame_thanks.grid(row=0, column=0)
 
-    frame_q5 = create_gui_q5(window, frame_thanks, first_ask_thanks)
+    frame_q30 = create_gui_q30(window, frame_thanks, first_ask_thanks)
+    frame_q30.grid(row=0, column=0)
+
+    frame_q6 = create_gui_q6(window, frame_q30, first_ask_q30)
+    frame_q6.grid(row=0, column=0)
+
+    frame_q5 = create_gui_q5(window, frame_q6, first_ask_q6)
     frame_q5.grid(row=0, column=0)
 
     frame_q4 = create_gui_q4(window, frame_q5, first_ask_q5)
@@ -44,28 +52,11 @@ def start_screen():
     frame_q1 = create_gui_q1(window, frame_q4, first_ask_q4)
     frame_q1.grid(row=0, column=0)
 
-    # frame_landing = create_gui_landing(window, frame_q1, first_ask_q1)
-    # frame_landing.grid(row=0, column=0)
-
-    
-
-    # imageFrame = tk.Frame(frame_q1, width=width, height=height)
-    # imageFrame.place(
-    #     x=829,
-    #     y=182,
-    # )
-
-    # image_video = Label(imageFrame, width=width, height=height)
-    # image_video.pack()
-    
-    # cap_play = cv2.VideoCapture(0)
-
-    # show_frame()
+    frame_landing = create_gui_landing(window, frame_q1, first_ask_q1)
+    frame_landing.grid(row=0, column=0)
 
 
-    # thread_speech(first_ask_landing)
-    thread_speech(first_ask_q1)
-
+    thread_speech(first_ask_landing)
     window.mainloop()
 
 
