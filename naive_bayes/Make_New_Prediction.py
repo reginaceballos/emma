@@ -1,5 +1,9 @@
-from data_preparation import clean_responses
 import sys
+sys.path.append("/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/GitHub_emma/")  # Replace with the path to the folder containing data_preparation.py
+from speech_to_text import speech_to_text
+
+from data_preparation import clean_responses
+
 import pickle
 import csv
 import numpy as np
@@ -14,16 +18,20 @@ def identity_analyzer(x):
     return x
 
 ## Prepare a new data point to be tested by the model
-def prepare_new_datapoint(input_file_name, saved_questions, vectorizer_list):
-    input_file_name = "/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/EMMA/" + input_file_name
-    response_dict = {} # dictionary where the question index is the key and the response is the value
-    with open(input_file_name, 'r', encoding='utf-8-sig') as csvfile:
-        datareader = csv.reader(csvfile)
-        for row in datareader:
-            if len(row) > 0:  # Accounts for empty rows in the csv
-                [question_index, response_string] = row
-                # make response string all lowercase and add to the dictionary
-                response_dict[int(question_index)] = response_string.lower()
+def prepare_new_datapoint(saved_questions, vectorizer_list):
+    # Make a dictionary where the question index is the key and the response is the value
+    response_dict = {}
+
+    # Get a dataframe with the responses to each question
+    response_df = speech_to_text()
+
+    for index, row in response_df.iterrows():
+        if len(row) >= 2:  # Ensure there are at least two columns
+            question_index = row[0]  # first column has the question index
+            response_string = row[1]  # second column has the response
+            response_dict[int(question_index)] = response_string.lower() # make response string all lowercase and add to the dictionary
+
+    print(saved_questions)
 
     # Make a 1 x Q response matrix (list of lists), where Q is the number of questions
     # Make the order of the response matrix match the questions used in the training data
@@ -53,20 +61,28 @@ def prepare_new_datapoint(input_file_name, saved_questions, vectorizer_list):
 
     return (response_list, point_final)
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        input_file_name = sys.argv[1]
-    else:
-        sys.exit("No input file name provided. Please provide a file name as an argument.")
-
+def make_new_prediction():
     # Load the model, question list, and vectorizers list that's needed for the prediction
     model_NB = load_pickle_file('naive_bayes_model.pkl')
     vectorizer_list = load_pickle_file('vectorizers.pkl')
     saved_questions = load_pickle_file('saved_questions.pkl')
 
     # prepare new datapoint
-    (transcript, point_final) = prepare_new_datapoint(input_file_name, saved_questions, vectorizer_list)
+    (transcript, point_final) = prepare_new_datapoint(saved_questions, vectorizer_list)
+
     # Make a prediction for a new datapoint
-    prediction = model_NB.predict(point_final)
-    print("Interview transcript: ", transcript)
-    print("Prediction: ", prediction)
+    prediction = int(model_NB.predict(point_final)[0])
+
+    if prediction == 0:
+        string_diagnosis = "Patient is not at risk of depression"
+    elif prediction == 1:
+        string_diagnosis = "Patient is at risk of depression"
+    else:
+        string_diagnosis = "Error in generating a prediction"
+
+    confidence = "N/A"
+
+    return string_diagnosis, confidence
+
+if __name__ == "__main__":
+    print(make_new_prediction())
