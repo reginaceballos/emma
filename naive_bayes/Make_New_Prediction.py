@@ -3,6 +3,8 @@ import sys
 # sys.path.append("/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/naive_bayes")  # Replace with the path to the folder containing data_preparation.py
 from speech_to_text import speech_to_text
 
+# sys.path.append("naive_bayes/")  # Replace with the path to the folder containing data_preparation.py
+
 from data_preparation import clean_responses
 
 import pickle
@@ -25,6 +27,8 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
 
     # Get a dataframe with the responses to each question
     response_df = speech_to_text()
+
+    print('response_df',response_df)
 
     for index, row in response_df.iterrows():
         if len(row) >= 2:  # Ensure there are at least two columns
@@ -65,9 +69,11 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
 
 def make_new_prediction():
     # Load the model, question list, and vectorizers list that's needed for the prediction
-    model_NB = load_pickle_file('naive_bayes_model.pkl')
-    vectorizer_list = load_pickle_file('vectorizers.pkl')
-    saved_questions = load_pickle_file('saved_questions.pkl')
+    model_NB = load_pickle_file('naive_bayes/naive_bayes_model.pkl')
+    vectorizer_list = load_pickle_file('naive_bayes/vectorizers.pkl')
+    saved_questions = load_pickle_file('naive_bayes/saved_questions.pkl')
+
+    print('saved_questions', saved_questions)
 
     # prepare new datapoint
     (transcript, point_final) = prepare_new_datapoint(saved_questions, vectorizer_list)
@@ -81,6 +87,8 @@ def make_new_prediction():
         string_diagnosis = "Patient is at risk of depression"
     else:
         string_diagnosis = "Error in generating a prediction"
+
+    print('string_diagnosis',string_diagnosis)
 
     confidence = "N/A"
 
