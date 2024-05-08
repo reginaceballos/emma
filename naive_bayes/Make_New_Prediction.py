@@ -1,5 +1,6 @@
 import sys
-sys.path.append("/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/GitHub_emma/")  # Replace with the path to the folder containing data_preparation.py
+# sys.path.append("/Users/caeleyharihara/Documents/MIT/Spring 2024/Multimodal Interfaces/Final Project/GitHub_emma/")  # Replace with the path to the folder containing data_preparation.py
+# sys.path.append("/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/naive_bayes")  # Replace with the path to the folder containing data_preparation.py
 from speech_to_text import speech_to_text
 
 from data_preparation import clean_responses

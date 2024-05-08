@@ -1,5 +1,5 @@
 from utils_gui import *
-from model_diagnosis import *
+from naive_bayes.Make_New_Prediction import *
 from speech_to_text import *
 from hume_expression import *
 from tkinter import Canvas, PhotoImage, Label, Button, Frame
@@ -110,7 +110,12 @@ def create_gui_results(window):
     button_download_transcript.bind('<Leave>', button_download_transcript_leave)
 
 
-    diagnosis, confidence = model_diagnosis()
+    diagnosis, confidence = make_new_prediction()
+
+    if confidence.isnumeric():
+        confidence_str = '{:.0%}'.format(confidence)
+    else:
+        confidence_str = confidence
 
     data_diagnosis_results = Label(
         frame_results,
@@ -131,7 +136,7 @@ def create_gui_results(window):
 
     data_confidence_results = Label(
         frame_results,
-        text= '{:.0%}'.format(confidence),
+        text= confidence_str,
         bd=0,
         bg="#7999D4",
         fg="#FFFFFF",
