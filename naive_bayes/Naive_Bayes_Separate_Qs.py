@@ -149,6 +149,25 @@ def show_result(prediction):
     # Show the result in a popup
     messagebox.showinfo("Result", f"User is {result}")
 
+# Find the top features in the NB model
+def show_top_features(classifier, vectorizer_list, top_n=3195):
+    # Make a list of all the words that correspond to the feature matrix vector that trained the model
+    feature_names_list_of_list = []
+    for i in range(len(vectorizer_list)):
+        vectorizer = vectorizer_list[i]
+        vectorizer_feature_names = vectorizer.get_feature_names_out()
+        feature_names_list_of_list.append(vectorizer_feature_names)
+    all_feature_names = [item for sublist in feature_names_list_of_list for item in sublist]
+
+    # See which features were the most predictive in the classifier
+    for i, class_label in enumerate(classifier.classes_):
+        top_features_all = np.argsort(classifier.feature_log_prob_[i])[::-1] # Sorted in order of most important to least important features
+        top_n_features = top_features_all[:top_n]  # Sorts features by log probability
+        print(f"Top {top_n} features for class {class_label}:")
+        print(", ".join(all_feature_names[j] for j in top_n_features))
+
+    return 1
+
 ## Save the pre-trained model so it can be used later
 def save_model(model, filename):
     with open(filename, 'wb') as file:
@@ -251,10 +270,14 @@ if __name__ == "__main__":
     else:
         print("error: Prediction not found")
 
-    # Save model, question list, and vectorizers list to be integrated in the front end
-    save_model(model_NB, 'naive_bayes_model.pkl')
-    save_vectorizers(vectorizer_list, 'vectorizers.pkl')
-    save_questions(questions_kept, 'saved_questions.pkl')
+    # # Find the most predictive features for the model
+    # top_n = 10
+    # show_top_features(model_NB, vectorizer_list, top_n)
+
+    # # Save model, question list, and vectorizers list to be integrated in the front end
+    # save_model(model_NB, 'naive_bayes_model.pkl')
+    # save_vectorizers(vectorizer_list, 'vectorizers.pkl')
+    # save_questions(questions_kept, 'saved_questions.pkl')
 
 
 
