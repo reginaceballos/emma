@@ -1,5 +1,5 @@
 from utils_gui import *
-# from naive_bayes.Make_New_Prediction import *
+from Make_New_Prediction import *
 from speech_to_text import *
 from hume_expression import *
 from tkinter import Canvas, PhotoImage, Label, Button, Frame
@@ -175,9 +175,17 @@ def create_gui_results(window):
     facial_emotion_2 = df_top_facial_emotions['emotion'][1]
     facial_emotion_3 = df_top_facial_emotions['emotion'][2]
 
+    # facial_emotion_1 = 'Sadness'
+    # facial_emotion_2 = 'Tiredness'
+    # facial_emotion_3 = 'Anxiety'
+
     facial_score_1 = df_top_facial_emotions['score'][0]
     facial_score_2 = df_top_facial_emotions['score'][1]
     facial_score_3 = df_top_facial_emotions['score'][2]
+
+    # facial_score_1 = 0.47
+    # facial_score_2 = 0.42
+    # facial_score_3 = 0.39
 
 
     data_facial_emotion_1 = Label(
@@ -348,10 +356,18 @@ def create_gui_results(window):
     speech_emotion_1 = df_top_speech_emotions['emotion'][0]
     speech_emotion_2 = df_top_speech_emotions['emotion'][1]
     speech_emotion_3 = df_top_speech_emotions['emotion'][2]
+    
+    # speech_emotion_1 = 'Tiredness'
+    # speech_emotion_2 = 'Sadness'
+    # speech_emotion_3 = 'Boredom'
 
     speech_score_1 = df_top_speech_emotions['score'][0]
     speech_score_2 = df_top_speech_emotions['score'][1]
     speech_score_3 = df_top_speech_emotions['score'][2]
+
+    # speech_score_1 = 0.16
+    # speech_score_2 = 0.12
+    # speech_score_3 = 0.11
 
 
     data_speech_emotion_1 = Label(
