@@ -69,9 +69,9 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
 
 def make_new_prediction():
     # Load the model, question list, and vectorizers list that's needed for the prediction
-    model_NB = load_pickle_file('naive_bayes/naive_bayes_model.pkl')
-    vectorizer_list = load_pickle_file('naive_bayes/vectorizers.pkl')
-    saved_questions = load_pickle_file('naive_bayes/saved_questions.pkl')
+    model_NB = load_pickle_file('naive_bayes_model.pkl')
+    vectorizer_list = load_pickle_file('vectorizers.pkl')
+    saved_questions = load_pickle_file('saved_questions.pkl')
 
     print('saved_questions', saved_questions)
 
