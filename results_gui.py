@@ -14,8 +14,8 @@ def start_screen():
     frame_results = create_gui_results(window)
     frame_results.grid(row=0, column=0)
 
-    # frame_healthworker = create_gui_healthworker(window, frame_results)
-    # frame_healthworker.grid(row=0, column=0)
+    frame_healthworker = create_gui_healthworker(window, frame_results)
+    frame_healthworker.grid(row=0, column=0)
 
     window.mainloop()
 

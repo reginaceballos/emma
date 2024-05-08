@@ -5,11 +5,12 @@ import time
 import threading
 from tkinter import PhotoImage
 
-sys.path.insert(0, '/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/')
+# sys.path.insert(0, '/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/')
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/build/assets/frames")
-
+# ASSETS_PATH = OUTPUT_PATH / Path(r"/Users/reginaceballos/Documents/MIT/2024-02 - Spring/6.8510 Intelligent Multimodal Interfaces/Final Project/emma/build/assets/frames")
+ASSETS_PATH = OUTPUT_PATH / 'build' / 'assets' / 'frames'
+# ASSETS_PATH = OUTPUT_PATH / Path(r"/build/assets/frames")
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)

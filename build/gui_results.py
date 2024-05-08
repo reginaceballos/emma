@@ -522,5 +522,6 @@ def create_gui_results(window):
 
 def button_download_transcript_button():
     df = pd.DataFrame(speech_to_text())
-    df.to_csv('/Users/reginaceballos/Downloads/EMMA_interview.csv', index=False, header=False)
+    # df.to_csv('/Users/reginaceballos/Downloads/EMMA_interview.csv', index=False, header=False)
+    df.to_csv('EMMA_interview.csv', index=False, header=False)
 

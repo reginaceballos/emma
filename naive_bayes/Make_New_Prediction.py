@@ -32,7 +32,8 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
             response_string = row[1]  # second column has the response
             response_dict[int(question_index)] = response_string.lower() # make response string all lowercase and add to the dictionary
 
-    print(saved_questions)
+    # print(saved_questions)
+    print(response_dict)
 
     # Make a 1 x Q response matrix (list of lists), where Q is the number of questions
     # Make the order of the response matrix match the questions used in the training data
