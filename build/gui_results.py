@@ -1,5 +1,6 @@
 from utils_gui import *
 from Make_New_Prediction import *
+from model_diagnosis import *
 from speech_to_text import *
 from hume_expression import *
 from tkinter import Canvas, PhotoImage, Label, Button, Frame
@@ -125,8 +126,9 @@ def create_gui_results(window):
 
 
     diagnosis, confidence = make_new_prediction()
+    # diagnosis, confidence = model_diagnosis()
 
-    if confidence.isnumeric():
+    if isinstance(confidence, float) or confidence.isnumeric():
         confidence_str = '{:.0%}'.format(confidence)
     else:
         confidence_str = confidence

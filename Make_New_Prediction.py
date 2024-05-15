@@ -28,7 +28,7 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
     # Get a dataframe with the responses to each question
     response_df = speech_to_text()
 
-    print('response_df',response_df)
+    # print('response_df',response_df)
 
     for index, row in response_df.iterrows():
         if len(row) >= 2:  # Ensure there are at least two columns
@@ -37,14 +37,21 @@ def prepare_new_datapoint(saved_questions, vectorizer_list):
             response_dict[int(question_index)] = response_string.lower() # make response string all lowercase and add to the dictionary
 
     # print(saved_questions)
-    print(response_dict)
+    # print(response_dict)
 
     # Make a 1 x Q response matrix (list of lists), where Q is the number of questions
     # Make the order of the response matrix match the questions used in the training data
     response_list = []
     for col in range(len(saved_questions)):
+
+        print('question_index', question_index)
+        print('response_dict', response_dict)
         question_index = int(saved_questions[col])
-        reponse_to_add = response_dict[question_index]
+        try:
+            reponse_to_add = response_dict[question_index]
+        except:
+            reponse_to_add = ""
+        
         response_list.append(reponse_to_add)
     # Add another column to the end (to match the fact that the original matrix had the interview ID in the last column
     response_list.append("New Datapoint")
@@ -73,7 +80,7 @@ def make_new_prediction():
     vectorizer_list = load_pickle_file('vectorizers.pkl')
     saved_questions = load_pickle_file('saved_questions.pkl')
 
-    print('saved_questions', saved_questions)
+    # print('saved_questions', saved_questions)
 
     # prepare new datapoint
     (transcript, point_final) = prepare_new_datapoint(saved_questions, vectorizer_list)
@@ -92,7 +99,7 @@ def make_new_prediction():
     # else:
     #     string_diagnosis = "Error in generating a prediction"
 
-    print('string_diagnosis',string_diagnosis)
+    # print('string_diagnosis',string_diagnosis)
 
     confidence = "N/A"
 
