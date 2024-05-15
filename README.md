@@ -16,6 +16,6 @@ Summary of Key Items in the Repository:
 1. make_naive_bayes_model folder: folder containing the code and input data necessary to create a new Naive Bayes model; transcripts folder holds all the interviews we trained on; Detailed_PHQ8_Labels shows the label for each interview; Selected-EMMA-Questions lets you pick which questions the model is built from; Naive_Bayes_Separate_Qs.py trains a new Naive Bayes model and stores it as a pkl file for use in Make_New_Prediction.py
 
 Steps to set up and run the EMMA system:
-1. Install all the necessary packages
+1. Install all the necessary packages: nltk (requires downloading stopwords from ssl), pickle, SpeechRecognition, tkinter
 1. Run main_interview_gui.py and follow EMMA's instructions to record a video
 1. Run main_results_gui.py; enter the username "emma" and the password "1234" to access the results page
