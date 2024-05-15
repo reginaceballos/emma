@@ -17,5 +17,5 @@ Summary of Key Items in the Repository:
 
 Steps to set up and run the EMMA system:
 1. Install all the necessary packages: nltk (requires downloading stopwords from ssl), pickle, SpeechRecognition, tkinter
-1. Run main_interview_gui.py and follow EMMA's instructions to record a video
+1. Run main_interview_gui.py and follow EMMA's instructions to record an interview
 1. Run main_results_gui.py; enter the username "emma" and the password "1234" to access the results page
